@@ -1,3 +1,4 @@
+#!/bin/sh
 
 echo "ytdl_play.sh [url|query]"
 echo
@@ -12,9 +13,22 @@ fi
 function dlp {
     # arguments = arguments to ytdlp
 
-    cmd="/usr/bin/python3.8 -m yt_dlp $@ --no-warnings"
+    cmd="/usr/bin/python -m yt_dlp $@ --no-warnings"
+    # check if python exists
+    python -V > /dev/null
+    if [[ $? -gt 0 ]]; then
+        echo "python is not installed. use your package manager to install it."
+        exit 1
+    fi
+    # check if the module exists
+    python -c 'import importlib.util; print(1 if importlib.util.find_spec("yt_dlp") else 0)'
+    if [[ $? -gt 0 ]];
+        echo "yt_dlp is not installed in this environment; run 'pip install yt_dlp' to install it"
+        exit 1
+    fi
+    
     >&2 echo "$ $cmd"
-    /usr/bin/python3.8 -m yt_dlp "$@" --no-warnings
+    $cmd
 }
 
 function get_dlp_url {

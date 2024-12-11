@@ -1,9 +1,11 @@
 #!/usr/bin/bash
 
-outputdevice=${2:-"hw:1,0"}
+
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+outputdevice=${2:-1}
 
 tape2wav $1 temp.wav
 
-sox -t wav temp.wav -S -t alsa $outputdevice
+$SCRIPT_DIR/zxplay.sh temp.wav $2
 
 rm temp.wav
